@@ -120,3 +120,15 @@ logs/
 # WMCA specific
 *.idx
 wmca.ini.bak
+dll/libeay32.dll
+dll/librsa32.dll
+dll/nsldap32v11.dll
+dll/sha256w32.dll
+dll/SKComdCM.dll
+dll/SKComdEM.dll
+dll/SKComdIF.dll
+dll/SKComdSC.dll
+dll/SKCommAD.dll
+dll/SKCommIC.dll
+dll/wmca.dll
+dll/wmca.ini
