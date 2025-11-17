@@ -124,23 +124,14 @@ class WMCAAgent:
     def _find_dll_path(self) -> str:
         """wmca.dll 경로 자동 탐색"""
         script_dir = Path(__file__).parent
-        possible_paths = [
-            script_dir / "api" / "bin" / "wmca.dll",
-            script_dir / "bin" / "wmca.dll",
-            Path("C:/Windows/System32/wmca.dll"),
-            Path("wmca.dll"),
-        ]
+        wmca_dll_path = script_dir / "dll" / "wmca.dll"
 
-        for path in possible_paths:
-            if path.exists():
-                return str(path)
-
-        # DLL을 찾지 못한 경우 명확한 에러 메시지와 함께 예외 발생
-        searched_paths = "\n".join([f"  - {path}" for path in possible_paths])
+        if wmca_dll_path.exists():
+            return str(wmca_dll_path)
+        
         raise FileNotFoundError(
             f"wmca.dll을 찾을 수 없습니다.\n"
-            f"다음 경로를 확인했습니다:\n{searched_paths}\n"
-            f"NH투자증권 WMCA API를 설치하고 DLL 파일을 위 경로 중 하나에 배치해주세요."
+            f"NH투자증권 OpenAPI 라이브러리를 다운받은 후 DLL 파일을 {wmca_dll_path} 경로에 배치해주세요."
         )
 
     def _init_function_pointers(self):
