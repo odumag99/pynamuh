@@ -839,37 +839,3 @@ class WMCAAgent:
         """
         self._dispose()
         return False
-
-
-# ============================================================================
-# 사용 예제
-# ============================================================================
-
-if __name__ == "__main__":
-    from settings import NamuSettings
-    import traceback
-
-    try:
-        # .env 파일에서 설정 로드
-        settings = NamuSettings()
-
-        with WMCAAgent() as client:
-            # 서버 연결
-            logger.info(f"서버 연결 시도: ID={settings.id}")
-            response = client.connect('T', 'W', settings.id, settings.pw, settings.cert_pw)
-
-            if response.success:
-                logger.info(f"로그인 성공!")
-                logger.info(f"접속 시간: {response.pLoginInfo.szDate}")
-                logger.info(f"서버명: {response.pLoginInfo.szServerName}")
-                logger.info(f"사용자ID: {response.pLoginInfo.szUserID}")
-                logger.info(f"계좌 수: {response.pLoginInfo.szAccountCount}")
-                logger.info(f"계좌 목록:")
-                for acc in response.pLoginInfo.accountlist:
-                    logger.info(f"  - {acc.szAccountNo}: {acc.szAccountName}")
-            else:
-                logger.error(f"로그인 실패: {response.error_message}")
-
-    except Exception as e:
-        logger.error(f"오류 발생: {e}")
-        logger.error(f"스택 트레이스:\n{traceback.format_exc()}")
