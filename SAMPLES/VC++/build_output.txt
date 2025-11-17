@@ -1,0 +1,54 @@
+
+C:\Projects\stock-system\trading-system\api\SAMPLES\VC++>echo Setting up Visual Studio environment... 
+Setting up Visual Studio environment...
+
+C:\Projects\stock-system\trading-system\api\SAMPLES\VC++>call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars32.bat" 
+'vswhere.exe'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
+배치 파일이 아닙니다.
+**********************************************************************
+** Visual Studio 2019 Developer Command Prompt v16.0
+** Copyright (c) 2021 Microsoft Corporation
+**********************************************************************
+[vcvarsall.bat] Environment initialized for: 'x86'
+
+Changing to project directory...
+
+Building project...
+.NET Framework용 Microsoft (R) Build Engine 버전 16.11.6+a918ceb31
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+빌드 시작: 2025-10-22 오후 3:55:58
+1 노드의 "C:\Projects\stock-system\trading-system\api\SAMPLES\VC++\WMCALOADER.vcxproj" 프로젝트(기본 대상)입니다.
+InitializeBuildStatus:
+  ".\Release\WMCALOADER.tlog\unsuccessfulbuild"에 연결(touching)하고 있습니다.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.29.30133\bin\HostX86\x86\CL.exe /c /Zi /nologo /W3 /WX- /diagnostics:column /Od /Oy- /D WIN32 /D NDEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _MBCS /D _AFXDLL /Gm- /EHsc /MD /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yc"stdafx.h" /Fp".\Release\WMCALOADER.pch" /Fo".\Release\\" /Fd".\Release\vc142.pdb" /FR".\Release\\" /external:W3 /Gd /TP /analyze- /FC /errorReport:queue StdAfx.cpp
+  StdAfx.cpp
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.29.30133\bin\HostX86\x86\CL.exe /c /Zi /nologo /W3 /WX- /diagnostics:column /Od /Oy- /D WIN32 /D NDEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _MBCS /D _AFXDLL /Gm- /EHsc /MD /GS /Gy- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp".\Release\WMCALOADER.pch" /Fo".\Release\\" /Fd".\Release\vc142.pdb" /FR".\Release\\" /external:W3 /Gd /TP /analyze- /FC /errorReport:queue WmcaIntf.cpp WMCALOADER.cpp WMCALOADERDlg.cpp
+  WmcaIntf.cpp
+  WMCALOADER.cpp
+  WMCALOADERDlg.cpp
+  코드를 생성하고 있습니다...
+ResourceCompile:
+  C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86\rc.exe /D NDEBUG /D _VC80_UPGRADE=0x0600 /D _AFXDLL /l"0x0412" /nologo /fo".\Release\WMCALOADER.res" WMCALOADER.rc 
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.29.30133\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:".\Release\WMCALOADER.exe" /INCREMENTAL:NO /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.29.30133\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:".\Release\WMCALOADER.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Release\WMCALOADER.lib" /MACHINE:X86 /SAFESEH .\Release\WMCALOADER.res
+  .\Release\StdAfx.obj
+  .\Release\WmcaIntf.obj
+  .\Release\WMCALOADER.obj
+  .\Release\WMCALOADERDlg.obj
+  WMCALOADER.vcxproj -> C:\Projects\stock-system\trading-system\api\SAMPLES\VC++\Release\WMCALOADER.exe
+BscMake:
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.29.30133\bin\HostX86\x86\bscmake.exe /nologo /o".\Release\WMCALOADER.bsc" .\Release\StdAfx.sbr .\Release\WmcaIntf.sbr .\Release\WMCALOADER.sbr .\Release\WMCALOADERDlg.sbr
+FinalizeBuildStatus:
+  ".\Release\WMCALOADER.tlog\unsuccessfulbuild" 파일을 삭제하고 있습니다.
+  ".\Release\WMCALOADER.tlog\WMCALOADER.lastbuildstate"에 연결(touching)하고 있습니다.
+"C:\Projects\stock-system\trading-system\api\SAMPLES\VC++\WMCALOADER.vcxproj" 프로젝트를 빌드했습니다(기본 대상).
+
+빌드했습니다.
+    경고 0개
+    오류 0개
+
+경과 시간: 00:00:07.48
+
+Build completed with exit code: 0
