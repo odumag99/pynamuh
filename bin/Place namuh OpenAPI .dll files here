@@ -1,0 +1,15 @@
+[required]
+libeay32.dll
+librsa32.dll
+nsldap32v11.dll
+sha256w32.dll
+SKComdCM.dll
+SKComdEM.dll
+SKComdIF.dll
+SKComdSC.dll
+SKCommAD.dll
+SKCommIC.dll
+wmca.dll
+
+[optional]
+wmca.ini
