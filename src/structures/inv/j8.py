@@ -1,5 +1,3 @@
-from typing import Annotated
-from typing_extensions import Doc
 from ctypes import Structure, c_char
 from dataclasses import dataclass
 
@@ -83,3 +81,9 @@ class Tj8OutBlock(OutBlock):
     open: str
     avgprice: str
     janggubun: str
+
+
+__all__ = [
+    "CTj8OutBlock",
+    "Tj8OutBlock",
+]

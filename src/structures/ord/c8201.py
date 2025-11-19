@@ -241,3 +241,10 @@ class Tc8201OutBlock1(OutBlock):
     issue_mgamt_ratez6: str
     medo_slby_amtz16: str
     post_lsnpf_amtz16: str
+
+__all__ = [
+    "CTc8201OutBlock",
+    "Tc8201OutBlock",
+    "CTc8201OutBlock1",
+    "Tc8201OutBlock1",
+]
