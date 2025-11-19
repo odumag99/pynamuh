@@ -10,12 +10,11 @@ import sys
 import win32gui
 import win32con
 import ctypes
-from ctypes import c_void_p, c_char_p, c_int, c_char, c_ulong, POINTER, Structure, WINFUNCTYPE
-from ctypes.wintypes import HWND, UINT, WPARAM, LPARAM, HINSTANCE, DWORD
-from typing import Generator, Optional, Callable, Dict, Any, Literal, List, Tuple
+from ctypes import c_char_p, c_int, c_char, WINFUNCTYPE
+from ctypes.wintypes import HWND, UINT, WPARAM, LPARAM, DWORD
+from typing import Generator, Optional, Any, Literal, Tuple
 from pathlib import Path
 from enum import IntEnum
-import threading
 import queue
 
 from .wmca_logger import logger
@@ -29,6 +28,7 @@ WNDPROC = WINFUNCTYPE(ctypes.c_long, HWND, UINT, WPARAM, LPARAM)
 user32 = ctypes.windll.user32
 kernel32 = ctypes.windll.kernel32
 
+
 # MSG 구조체
 class MSG(ctypes.Structure):
     _fields_ = [
@@ -40,11 +40,10 @@ class MSG(ctypes.Structure):
         ("pt", ctypes.wintypes.POINT),
     ]
 
+
 # Windows 환경 확인
 if sys.platform != "win32":
     raise OSError("이 모듈은 Windows 환경에서만 실행 가능합니다.")
-
-
 
 
 # ============================================================================
@@ -54,21 +53,24 @@ if sys.platform != "win32":
 # WMCA 이벤트 메시지 (샘플 코드 참고)
 CA_WMCAEVENT = win32con.WM_USER + 8400  # 중요! wparam에 실제 메시지 타입이 들어있음
 
+
 class WMCAMessage(IntEnum):
     """WMCA 응답 메시지 종류"""
-    CA_CONNECTED = win32con.WM_USER + 110       # 로그인 성공
-    CA_DISCONNECTED = win32con.WM_USER + 120    # 연결 해제
-    CA_SOCKETERROR = win32con.WM_USER + 130     # 통신 오류
-    CA_RECEIVEDATA = win32con.WM_USER + 210     # TR 결과 수신
-    CA_RECEIVESISE = win32con.WM_USER + 220     # 실시간 시세 수신
+
+    CA_CONNECTED = win32con.WM_USER + 110  # 로그인 성공
+    CA_DISCONNECTED = win32con.WM_USER + 120  # 연결 해제
+    CA_SOCKETERROR = win32con.WM_USER + 130  # 통신 오류
+    CA_RECEIVEDATA = win32con.WM_USER + 210  # TR 결과 수신
+    CA_RECEIVESISE = win32con.WM_USER + 220  # 실시간 시세 수신
     CA_RECEIVEMESSAGE = win32con.WM_USER + 230  # 상태 메시지
-    CA_RECEIVECOMPLETE = win32con.WM_USER + 240 # 처리 완료
-    CA_RECEIVEERROR = win32con.WM_USER + 250    # 처리 실패
+    CA_RECEIVECOMPLETE = win32con.WM_USER + 240  # 처리 완료
+    CA_RECEIVEERROR = win32con.WM_USER + 250  # 처리 실패
 
 
 # ============================================================================
 # WMCAAgent - DLL 저수준 클라이언트
 # ============================================================================
+
 
 class WMCAAgent:
     """
@@ -80,10 +82,7 @@ class WMCAAgent:
     - 응답 메시지를 Python 객체로 변환
     """
 
-    def __init__(
-        self,
-        dll_path: Optional[str] = None
-    ):
+    def __init__(self, dll_path: Optional[str] = None):
         """
         WMCAAgent 초기화
 
@@ -128,7 +127,7 @@ class WMCAAgent:
 
         if wmca_dll_path.exists():
             return str(wmca_dll_path)
-        
+
         raise FileNotFoundError(
             f"wmca.dll을 찾을 수 없습니다.\n"
             f"NH투자증권 OpenAPI 라이브러리를 다운받은 후 DLL 파일을 {wmca_dll_path} 경로에 배치해주세요."
@@ -251,6 +250,7 @@ class WMCAAgent:
 
         # 윈도우 클래스 등록 (인스턴스마다 고유한 이름 사용)
         import time
+
         self.wnd_class_name = f"WMCA_WINDOW_{id(self)}_{int(time.time() * 1000)}"
 
         wc = win32gui.WNDCLASS()
@@ -260,17 +260,16 @@ class WMCAAgent:
 
         try:
             self.wnd_class_atom = win32gui.RegisterClass(wc)
-            logger.debug(f"윈도우 클래스 등록 성공: name={self.wnd_class_name}, atom={self.wnd_class_atom}")
+            logger.debug(
+                f"윈도우 클래스 등록 성공: name={self.wnd_class_name}, atom={self.wnd_class_atom}"
+            )
         except Exception as e:
             logger.error(f"윈도우 클래스 등록 실패: {e}")
             raise
 
         # 숨김 윈도우 생성
         self.hwnd = win32gui.CreateWindow(
-            wc.lpszClassName,
-            "WMCA Message Window",
-            0, 0, 0, 0, 0,
-            0, 0, wc.hInstance, None
+            wc.lpszClassName, "WMCA Message Window", 0, 0, 0, 0, 0, 0, 0, wc.hInstance, None
         )
         logger.debug(f"CreateWindow 완료: hwnd={self.hwnd}")
 
@@ -306,7 +305,9 @@ class WMCAAgent:
             logger.warning(f"알 수 없는 메시지 타입: wparam={wparam}")
             return
 
-        logger.debug("CA_WMCAEVENT 수신: msg_type=%s (%s), lparam=%s", msg_type.name, msg_type.value, lparam)
+        logger.debug(
+            "CA_WMCAEVENT 수신: msg_type=%s (%s), lparam=%s", msg_type.name, msg_type.value, lparam
+        )
 
         # 메시지 타입에 따라 파싱 (WMCAMessageParser 사용)
         parsed_dto = None
@@ -317,8 +318,7 @@ class WMCAAgent:
             parsed_dto = WMCAMessageParser.parse_loginblock(lparam)
         elif msg_type == WMCAMessage.CA_RECEIVEMESSAGE:
             parsed_dto = WMCAMessageParser.parse_outdatablock(lparam, is_receivemessage=True)
-        elif ( msg_type == WMCAMessage.CA_RECEIVEDATA \
-              or msg_type == WMCAMessage.CA_RECEIVECOMPLETE ):
+        elif msg_type == WMCAMessage.CA_RECEIVEDATA or msg_type == WMCAMessage.CA_RECEIVECOMPLETE:
             parsed_dto = WMCAMessageParser.parse_outdatablock(lparam)
         elif msg_type == WMCAMessage.CA_RECEIVESISE:
             parsed_dto = WMCAMessageParser.parse_outdatablock(lparam, is_receivesise=True)
@@ -335,7 +335,9 @@ class WMCAAgent:
             self._create_message_window()
             logger.debug(f"메시지 윈도우 생성 완료: hwnd={self.hwnd}")
 
-    def receive_events(self, timeout: Optional[float] = None) -> Generator[Tuple[WMCAMessage, Any], None, None]:
+    def receive_events(
+        self, timeout: Optional[float] = None
+    ) -> Generator[Tuple[WMCAMessage, Any], None, None]:
         """
         Windows 메시지 큐에서 이벤트를 수신하는 Generator
 
@@ -365,6 +367,7 @@ class WMCAAgent:
             - 각 메시지는 이미 파싱된 Python 객체로 반환됨
         """
         import time
+
         start_time = time.time()
 
         while True:
@@ -382,7 +385,9 @@ class WMCAAgent:
             # 큐에서 파싱된 메시지 확인
             try:
                 msg_type, parsed_data = self.message_queue.get_nowait()
-                logger.debug(f"receive_events: 메시지 수신 - type={msg_type.name}, data={type(parsed_data).__name__}")
+                logger.debug(
+                    f"receive_events: 메시지 수신 - type={msg_type.name}, data={type(parsed_data).__name__}"
+                )
                 yield (msg_type, parsed_data)
             except queue.Empty:
                 pass
@@ -398,8 +403,8 @@ class WMCAAgent:
         szID: str,
         szPW: str,
         szCertPW: str,
-        MediaType: Literal['P', 'T'] = 'T',
-        UserType: Literal['1', 'W'] = 'W'
+        MediaType: Literal["P", "T"] = "T",
+        UserType: Literal["1", "W"] = "W",
     ) -> bool:
         """
         서버 연결 요청 (wmcaConnect)
@@ -434,23 +439,25 @@ class WMCAAgent:
             >>> login_info = client.connect(...)  # 내부적으로 receive_events 사용
         """
         if not self.initialized:
-            raise RuntimeError("Agent가 초기화되지 않았습니다. with 문으로 사용하거나 initialize()를 먼저 호출하세요.")
+            raise RuntimeError(
+                "Agent가 초기화되지 않았습니다. with 문으로 사용하거나 initialize()를 먼저 호출하세요."
+            )
 
         logger.info(f"로그인 요청 전송: ID={szID}, MediaType={MediaType}, UserType={UserType}")
 
         # 서버 연결 호출 (요청만 전송)
-        id_bytes = szID.encode('utf-8')
-        pw_bytes = szPW.encode('utf-8')
-        cert_pw_bytes = szCertPW.encode('utf-8')
+        id_bytes = szID.encode("utf-8")
+        pw_bytes = szPW.encode("utf-8")
+        cert_pw_bytes = szCertPW.encode("utf-8")
 
         result = self.wmca_connect(
             self.hwnd,
             CA_WMCAEVENT,
             ord(MediaType),  # 'P' 또는 'T'를 정수로 변환
-            ord(UserType),   # '1' 또는 'W'를 정수로 변환
+            ord(UserType),  # '1' 또는 'W'를 정수로 변환
             id_bytes,
             pw_bytes,
-            cert_pw_bytes
+            cert_pw_bytes,
         )
 
         if result:
@@ -459,7 +466,6 @@ class WMCAAgent:
             logger.error("wmcaConnect() 호출 실패")
 
         return bool(result)
-
 
     def disconnect(self) -> bool:
         """서버 연결 해제 (로그아웃)"""
@@ -496,29 +502,22 @@ class WMCAAgent:
         hash_buffer = ctypes.create_string_buffer(44)
 
         # 평문 비밀번호를 cp949로 인코딩
-        password_bytes = password.encode('cp949')
+        password_bytes = password.encode("cp949")
 
         # DLL 함수 호출
-        result = self.wmca_set_account_index_pwd(
-            hash_buffer,
-            account_index,
-            password_bytes
-        )
+        result = self.wmca_set_account_index_pwd(hash_buffer, account_index, password_bytes)
 
         if not result:
-            raise RuntimeError(
-                f"계좌 비밀번호 해시 생성 실패 (account_index={account_index})"
-            )
+            raise RuntimeError(f"계좌 비밀번호 해시 생성 실패 (account_index={account_index})")
 
         # bytes → str (cp949 디코딩)
         # 해시는 ASCII/cp949 호환 텍스트이므로 안전하게 디코딩 가능
-        hash_str = hash_buffer.value.decode('cp949')
+        hash_str = hash_buffer.value.decode("cp949")
 
         # 길이 검증
         if len(hash_str) != 44:
             raise ValueError(
-                f"예상치 못한 해시 길이: {len(hash_str)}자 (예상: 44자)\n"
-                f"해시값: '{hash_str}'"
+                f"예상치 못한 해시 길이: {len(hash_str)}자 (예상: 44자)\n" f"해시값: '{hash_str}'"
             )
 
         return hash_str
@@ -533,13 +532,7 @@ class WMCAAgent:
         except Exception:
             return False
 
-    def query(
-        self,
-        nTRID: int,
-        szTRCode: str,
-        szInput: InBlock,
-        nAccountIndex: int = 0
-    ) -> bool:
+    def query(self, nTRID: int, szTRCode: str, szInput: InBlock, nAccountIndex: int = 0) -> bool:
         """
         TR(Transaction) 조회 요청 전송 (wmcaQuery)
 
@@ -573,22 +566,19 @@ class WMCAAgent:
             >>> client = WMCAClient()
             >>> blocks = client.query(...)  # 내부적으로 receive_events 사용
         """
-        logger.info(f"TR 조회 요청 전송: TrCode={szTRCode}, TrIndex={nTRID}, AccountIndex={nAccountIndex}")
+        logger.info(
+            f"TR 조회 요청 전송: TrCode={szTRCode}, TrIndex={nTRID}, AccountIndex={nAccountIndex}"
+        )
 
         # InputBlock을 C 구조체로 변환
         c_struct = szInput.to_c_struct()
         input_bytes = ctypes.string_at(ctypes.addressof(c_struct), ctypes.sizeof(c_struct))
-        tr_code_bytes = szTRCode.encode('utf-8')
+        tr_code_bytes = szTRCode.encode("utf-8")
 
         # wmcaQuery 호출 (요청만 전송)
         logger.debug(f"wmcaQuery() 호출 - hwnd={self.hwnd}, TrIndex={nTRID}, TrCode={szTRCode}")
         result = self.wmca_query(
-            self.hwnd,
-            nTRID,
-            tr_code_bytes,
-            input_bytes,
-            len(input_bytes),
-            nAccountIndex
+            self.hwnd, nTRID, tr_code_bytes, input_bytes, len(input_bytes), nAccountIndex
         )
 
         if not result:
@@ -598,13 +588,7 @@ class WMCAAgent:
         logger.debug(f"TR 조회 요청 완료 - TrIndex={nTRID}")
         return bool(result)
 
-    def attach(
-        self,
-        szBCType: str,
-        szInput: str,
-        nCodeLen: int,
-        nInputLen: int
-    ) -> bool:
+    def attach(self, szBCType: str, szInput: str, nCodeLen: int, nInputLen: int) -> bool:
         """
         실시간 시세 등록 (wmcaAttach)
 
@@ -657,21 +641,17 @@ class WMCAAgent:
             - api/SAMPLES/VC++/WMCALOADERDlg.cpp:663-669 (실시간 등록 예제)
         """
 
-        logger.debug(f"실시간 시세 등록: BC={szBCType}, Input={szInput}, CodeLen={nCodeLen}, InputLen={nInputLen}")
+        logger.debug(
+            f"실시간 시세 등록: BC={szBCType}, Input={szInput}, CodeLen={nCodeLen}, InputLen={nInputLen}"
+        )
 
         # 입력값을 cp949로 인코딩
-        bc_type_bytes = szBCType.encode('cp949')
-        input_bytes = szInput.encode('cp949')
+        bc_type_bytes = szBCType.encode("cp949")
+        input_bytes = szInput.encode("cp949")
 
         # wmcaAttach 호출
         logger.debug(f"wmcaAttach() 호출 - hwnd={self.hwnd}, BC={szBCType}")
-        result = self.wmca_attach(
-            self.hwnd,
-            bc_type_bytes,
-            input_bytes,
-            nCodeLen,
-            nInputLen
-        )
+        result = self.wmca_attach(self.hwnd, bc_type_bytes, input_bytes, nCodeLen, nInputLen)
 
         if result:
             logger.info(f"실시간 시세 등록 성공: {szBCType} - {szInput}")
@@ -680,13 +660,7 @@ class WMCAAgent:
 
         return bool(result)
 
-    def detach(
-        self,
-        szBCType: str,
-        szInput: str,
-        nCodeLen: int,
-        nInputLen: int
-    ) -> bool:
+    def detach(self, szBCType: str, szInput: str, nCodeLen: int, nInputLen: int) -> bool:
         """
         실시간 시세 해제 (wmcaDetach)
 
@@ -721,18 +695,12 @@ class WMCAAgent:
         logger.info(f"실시간 시세 해제: BC={szBCType}, Input={szInput}")
 
         # 입력값을 cp949로 인코딩
-        bc_type_bytes = szBCType.encode('cp949')
-        input_bytes = szInput.encode('cp949')
+        bc_type_bytes = szBCType.encode("cp949")
+        input_bytes = szInput.encode("cp949")
 
         # wmcaDetach 호출
         logger.debug(f"wmcaDetach() 호출 - hwnd={self.hwnd}, BC={szBCType}")
-        result = self.wmca_detach(
-            self.hwnd,
-            bc_type_bytes,
-            input_bytes,
-            nCodeLen,
-            nInputLen
-        )
+        result = self.wmca_detach(self.hwnd, bc_type_bytes, input_bytes, nCodeLen, nInputLen)
 
         if result:
             logger.info(f"실시간 시세 해제 성공: {szBCType} - {szInput}")
@@ -771,7 +739,7 @@ class WMCAAgent:
         if not self.initialized:
             logger.debug("초기화되지 않음 - dispose 스킵")
             return
-        
+
         logger.debug("WMCA Agent 리소스 정리 시작")
 
         # 1. 연결 해제
