@@ -17,8 +17,10 @@ from ..common import InBlock, OutBlock
 class CTc8201InBlock(Structure):
     """주식잔고조회(예수금, 종목) 입력 블록 C 구조체"""
     _fields_ = [
-        ("pswd_noz44", ctypes.c_char * 44),    # 계좌비밀번호
-        ("bnc_bse_cdz1", ctypes.c_char * 1),   # 잔고구분
+        ("pswd_noz44", ctypes.c_char * 44),      # 계좌비밀번호
+        ("_pswd_noz44", ctypes.c_char * 1),      # 속성 바이트
+        ("bnc_bse_cdz1", ctypes.c_char * 1),     # 잔고구분
+        ("_bnc_bse_cdz1", ctypes.c_char * 1),    # 속성 바이트
     ]
 
 
