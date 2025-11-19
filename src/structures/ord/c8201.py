@@ -243,6 +243,8 @@ class Tc8201OutBlock1(OutBlock):
     post_lsnpf_amtz16: str
 
 __all__ = [
+    "CTc8201InBlock",
+    "Tc8201InBlock",
     "CTc8201OutBlock",
     "Tc8201OutBlock",
     "CTc8201OutBlock1",
