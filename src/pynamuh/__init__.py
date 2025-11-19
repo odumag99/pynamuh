@@ -24,10 +24,11 @@ if platform.architecture()[0] != "32bit":
     raise ImportError("이 모듈은 32비트 Python에서만 실행 가능합니다.")
 
 # Public API
-from .wmca_agent import WMCAAgent
+from .wmca_agent import WMCAAgent, WMCAMessage
 
 
 __all__ = [
     # Main API
-    "WMCAAgent"
+    "WMCAAgent",
+    "WMCAMessage"
 ]
