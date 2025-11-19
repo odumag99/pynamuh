@@ -7,8 +7,8 @@ name = "pynamuh"
 version = "0.1.0dev1"
 description = "Python wrapper for Namuh Securities OpenAPI"
 readme = "README.md"
-requires-python = "~=3.13"
-license = {text = "MIT"}
+requires-python = ">=3.13, <4.0"
+license = "MIT"
 license-files = ["LICEN[CS]E*"]
 authors = [
     {name = "odumag99", email = "odumag99@gmail.com"}
@@ -31,33 +31,21 @@ dependencies = [
     "pywin32>=311",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "black>=23.0.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
-    "ipykernel>=7.0.0",
-]
-
 [project.urls]
 Homepage = "https://github.com/yourusername/pynamuh"
 Documentation = "https://github.com/yourusername/pynamuh/blob/main/README.md"
 Repository = "https://github.com/yourusername/pynamuh"
 Issues = "https://github.com/yourusername/pynamuh/issues"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["pynamuh*"]
-exclude = ["tests*", "SAMPLES*"]
+[tool.uv]
+package = true
 
-[tool.setuptools.package-data]
-pynamuh = [
-    "bin/*.dll",
-    "bin/*.ini",
-    "*.pdf",
-    "*.doc",
+[tool.uv.sources]
+pynamuh = { workspace = true, editable = true }
+
+[tool.uv.workspace]
+members = [
+    ".",
 ]
 
 [tool.black]
@@ -73,3 +61,11 @@ python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
+
+[dependency-groups]
+dev = [
+    "black>=25.11.0",
+    "pynamuh",
+    "pytest>=9.0.1",
+    "ruff>=0.14.5",
+]
