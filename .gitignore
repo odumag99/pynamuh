@@ -200,3 +200,4 @@ src/dll/SKCommAD.dll
 src/dll/SKCommIC.dll
 src/dll/wmca.dll
 src/dll/wmca.ini
+wmca_client.py
