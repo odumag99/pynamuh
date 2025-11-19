@@ -120,18 +120,7 @@ logs/
 # WMCA specific
 *.idx
 wmca.ini.bak
-dll/libeay32.dll
-dll/librsa32.dll
-dll/nsldap32v11.dll
-dll/sha256w32.dll
-dll/SKComdCM.dll
-dll/SKComdEM.dll
-dll/SKComdIF.dll
-dll/SKComdSC.dll
-dll/SKCommAD.dll
-dll/SKCommIC.dll
-dll/wmca.dll
-dll/wmca.ini
+
 SAMPLES/VC++/build_output.txt
 SAMPLES/VC++/build.bat
 SAMPLES/VC++/resource.h
@@ -199,3 +188,15 @@ SDK.pdf
 시세_SPEC_20201015.pdf
 주문_SPEC_20190919.doc
 주문_SPEC_20190919.pdf
+src/dll/libeay32.dll
+src/dll/librsa32.dll
+src/dll/nsldap32v11.dll
+src/dll/sha256w32.dll
+src/dll/SKComdCM.dll
+src/dll/SKComdEM.dll
+src/dll/SKComdIF.dll
+src/dll/SKComdSC.dll
+src/dll/SKCommAD.dll
+src/dll/SKCommIC.dll
+src/dll/wmca.dll
+src/dll/wmca.ini
