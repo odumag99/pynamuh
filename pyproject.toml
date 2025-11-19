@@ -1,29 +1,26 @@
 [build-system]
-requires = ["setuptools>=68.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build >= 0.9.5, < 0.10.0"]
+build-backend = "uv_build"
 
 [project]
 name = "pynamuh"
-version = "0.1.0"
-description = "Python wrapper for NH Investment & Securities WMCA API"
+version = "0.1.0dev1"
+description = "Python wrapper for Namuh Securities OpenAPI"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = "~=3.13"
 license = {text = "MIT"}
+license-files = ["LICEN[CS]E*"]
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "odumag99", email = "odumag99@gmail.com"}
 ]
-keywords = ["stock", "trading", "NH", "WMCA", "investment"]
+keywords = ["namuh", "openAPI", "stock", "trading", "NH", "WMCA", "investment"]
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "Environment :: Win32 (MS Windows)",
     "Intended Audience :: Developers",
     "Intended Audience :: Financial and Insurance Industry",
     "License :: OSI Approved :: MIT License",
     "Operating System :: Microsoft :: Windows",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Office/Business :: Financial :: Investment",
 ]
